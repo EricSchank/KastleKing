@@ -1,3 +1,61 @@
 html, body {
   margin: 20px;
+  font-family: arial;
+}
+
+img.castle {
+  width: 150px;  
+}
+
+.buildings {
+  overflow: hidden;
+}
+
+.buildings .building {
+  float: left;
+  list-style: none;
+  margin-right: 10px;
+}
+
+.buildings .building > *, .buildings .building img {
+  width: 150px;
+  text-align: center;
+}
+
+.buildings:after {
+  clear: both;
+}
+
+.castle-list {
+  overflow: hidden;
+}
+
+.castle-list > li {
+  float: left;
+  list-style: none;
+  margin-right: 10px;
+}
+
+.castle-list > li img, .castle-list > li > div {
+  width: 150px;
+  text-align: center;
+}
+
+.castle-list:after {
+  clear: both;
+}
+
+footer {
+  margin-top: 20px;
+  clear: both;
+}
+
+.progress {
+  border: 1px solid #CCC;
+  width: 150px;
+}
+
+.progress > .bar {
+  background-color: blue;
+  height: 12px;
 }

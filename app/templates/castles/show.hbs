@@ -1,0 +1,11 @@
+<h2>Castle {{name}}</h2>
+<img class="castle" {{bind-attr src=image}}/>
+<div>${{earned}}</div>
+
+<ul class="buildings">
+{{#each buildings}}
+  <li class="building">{{render 'buildings.show' this}}</li>
+{{/each}}
+</ul>
+
+{{outlet}}

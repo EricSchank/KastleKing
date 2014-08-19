@@ -1,0 +1,14 @@
+<h2>Castles</h2>
+
+{{log this}}
+<ul class="castle-list">
+{{#each}}
+  <li>
+    {{#link-to 'castles.show' this}}
+      <img {{bind-attr src=image}}/>
+    {{/link-to}}
+    <div>${{earned}}</div>
+  </li>
+{{/each}}
+</ul>
+
