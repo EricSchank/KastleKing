@@ -59,7 +59,7 @@ Building.reopenClass({
       type: 'Blacksmith',
       image: 'Blacksmith.png',
       perCycle: 10,
-      cyclePeriod: 10000,
+      cyclePeriod: 10000, //ms
     },
     {
       id: 2,
@@ -67,7 +67,7 @@ Building.reopenClass({
       type: 'Hut',
       image: 'Hut.png',
       perCycle: 3,
-      cyclePeriod: 5000
+      cyclePeriod: 5000 //ms
     },
     {
       id: 3,

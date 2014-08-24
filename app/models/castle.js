@@ -5,6 +5,8 @@ var Castle = DS.Model.extend({
   image: DS.attr('string'),
   buildings: DS.hasMany('building', {async: true}),
   earned: DS.attr('integer', {defaultValue: 0}),
+  buildingCount: 0,
+  perSecond: 0.0,
 
   // earned: function() {
   //   var buildings = this.get('buildings');
@@ -23,6 +25,29 @@ var Castle = DS.Model.extend({
       });
     });
   },
+
+  bldgCount: function() {
+    var self = this;
+    this.get('buildings').then(function(bldgs){
+      self.set('buildingCount', bldgs.get('length'));
+    });
+  }.observes('buildings.length').on('init'),
+
+  perSec: function() {
+    var totSec = 0.0;
+    var self = this;
+    self.get('buildings').then(function(bldgs){
+      bldgs.forEach(function(bldg){
+        var perC = bldg.get('perCycle');
+        var cPeriod = bldg.get('cyclePeriod');
+        var perS = 1000.0 * perC / cPeriod;
+        console.log(''+perS);
+        totSec += perS;
+      });
+      self.set('perSecond', totSec.toFixed(2));
+    });
+  }.observes('buildings.length').on('init')
+
 });
 
 Castle.reopen({

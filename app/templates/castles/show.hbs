@@ -1,6 +1,8 @@
 <h2>Castle {{name}}</h2>
 <img class="castle" {{bind-attr src=image}}/>
 <div>${{earned}}</div>
+<div>${{perSecond}} / Sec</div>
+<div>{{buildingCount}} Buildings</div>
 
 <ul class="buildings">
 {{#each buildings}}

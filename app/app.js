@@ -8,7 +8,12 @@ Ember.MODEL_FACTORY_INJECTIONS = true;
 var App = Ember.Application.extend({
   modulePrefix: 'kastle-king', // TODO: loaded via config
   Resolver: Resolver,
-  ApplicationAdapter: DS.FixtureAdapter.extend()
+  ApplicationAdapter: DS.FixtureAdapter.extend({
+    queryFixtures: function(fixtures, query/*, type */) {
+      var key = Ember.keys(query)[0];
+      return fixtures.filterBy(key, query[key]);
+    }    
+  })
 });
 
 loadInitializers(App, 'kastle-king');
