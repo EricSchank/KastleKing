@@ -4,10 +4,22 @@
 <div>${{perSecond}} / Sec</div>
 <div>{{buildingCount}} Buildings</div>
 
+<div>
+  {{#if canBuyHut}}
+    <button {{action 'new_building' 'Hut'}}> + Hut </button>
+  {{/if}}
+  {{#if canBuyBlacksmith}}
+    <button {{action 'new_building' 'Blacksmith'}}> + Blacksmith </button>
+  {{/if}}
+  {{#if canBuyLookout}}
+    <button {{action 'new_building' 'Lookout'}}> + Lookout </button>
+  {{/if}}
+</div>
+
 <ul class="buildings">
-{{#each buildings}}
-  <li class="building">{{render 'buildings.show' this}}</li>
-{{/each}}
+  {{#each buildings}}
+    <li class="building">{{render 'buildings.show' this}}</li>
+  {{/each}}
 </ul>
 
 {{outlet}}

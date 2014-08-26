@@ -1,10 +1,11 @@
 import DS from 'ember-data';
+import Building from './building';
 
 var Castle = DS.Model.extend({
   name: DS.attr('string', {defaultValue: "The King's Kastle"}),
   image: DS.attr('string'),
   buildings: DS.hasMany('building', {async: true}),
-  earned: DS.attr('integer', {defaultValue: 0}),
+  earned: DS.attr('integer', {defaultValue: 20}),
   buildingCount: 0,
   perSecond: 0.0,
 
@@ -16,6 +17,30 @@ var Castle = DS.Model.extend({
   //   });
   //   return total;
   // }.property('buildings.@each.earned')
+
+  canBuyHut: function() {
+    return this.get('earned') >= Building.cost('Hut');
+  }.property('earned'),
+  canBuyBlacksmith: function() {
+    return this.get('earned') >= Building.cost('Blacksmith');
+  }.property('earned'),
+  canBuyLookout: function() {
+    return this.get('earned') >= Building.cost('Lookout');
+  }.property('earned'),
+
+  buyBuilding: function(bldg_type) {
+    var self = this;
+    Building.createBuilding(this.store, bldg_type).then(function(newBldg){
+      var earned = self.get('earned');
+      var cost = newBldg.get('cost');
+      self.set('earned', (earned - cost));
+
+      self.get('buildings').addObject(newBldg);
+      newBldg.didLoad(); // Start eaning timer
+      self.didLoad();
+    });
+  },
+
 
   didLoad: function(){
     var self = this;
@@ -50,35 +75,36 @@ var Castle = DS.Model.extend({
 
 });
 
-Castle.reopen({
-});
-
-
 Castle.reopenClass({
   FIXTURES: [
     {
       id: 1,
       name: 'Connor',
       image: 'castle2.png',
-      buildings: [1,2,3]
+      buildings: [1]
     },
     {
       id: 2,
       name: 'Daddy',
       image: 'castle4.png',
-      buildings: [1,3]
+      buildings: [2]
     },
     {
       id: 3,
       name: 'Evan',
       image: 'castle1.png',
-      buildings: [2,3]
+      buildings: [3]
+      // buildings: [
+      //   Building.createBuilding('Lookout'),
+      //   Building.createBuilding('Hut')
+      // ]
     },
     {
       id: 4,
       name: 'Mommy',
       image: 'castle3.png',
-      buildings: []
+      buildings: [4]
+      // buildings: [Building.createBuilding('Hut')]
     }
   ]
 
