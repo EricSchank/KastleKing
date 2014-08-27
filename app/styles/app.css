@@ -7,6 +7,10 @@ img.castle {
   width: 150px;  
 }
 
+.buy-buttons {
+  height: 22px;
+}
+
 .buildings {
   overflow: hidden;
 }
@@ -20,6 +24,10 @@ img.castle {
 .buildings .building > *, .buildings .building img {
   width: 150px;
   text-align: center;
+}
+
+.buildings .building img, .buildings .image {
+  height: 110px;
 }
 
 .buildings:after {

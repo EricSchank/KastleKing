@@ -1,5 +1,4 @@
 import Ember from 'ember';
-import Building from '../../models/building';
 
 export default Ember.Route.extend({
   actions: {

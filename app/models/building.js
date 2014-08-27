@@ -10,6 +10,7 @@ var Building = DS.Model.extend({
   earned: DS.attr('integer', {defaultValue: 0}),
   cost: DS.attr('integer', {defaultValue: 0}),
   castle: DS.belongsTo('castle', {async: true}),
+  interval: 0,
 
   clicked: function() {
     this.step();
@@ -24,13 +25,17 @@ var Building = DS.Model.extend({
       self.set('pct', 0);
       // console.log(self.get('name')+ ' earned '+ self.get('perCycle') );
 
-      self.get('castle').then(function(parent){
-        if(parent) {
-          parent.set('earned', parent.get('earned') + per);
-        } else {
-          console.log('Can"t find parent castle!');
-        }
-      });
+
+      var prom = self.get('castle');
+      if(prom) {
+        prom.then(function(parent) {
+          if(parent) {
+            parent.set('earned', parent.get('earned') + per);
+          } else {
+            console.log('Can"t find parent castle!');
+          }
+        });
+      }
     }
   },
 
@@ -40,41 +45,32 @@ var Building = DS.Model.extend({
 
 });
 
-Building.reopen({
-  didLoad: function(){
-    var self = this;
-    setInterval(function() {
-      self.step();
-    }, this.get('cyclePeriod') / 100); //every second
-    
-  },
-});
-
 Building.reopenClass({
+  INTERVALS: [['Blacksmith', 100], ['Hut', 50], ['Lookout', 400]],
 
-});
-
-Building.reopenClass({
   TYPES: {
     Blacksmith: {
       buildingType: 'Blacksmith',
       image: 'Blacksmith.png',
       perCycle: 10,
-      cyclePeriod: 10000, //ms
+      cyclePeriod: 100, //ms
+      // cyclePeriod: this.INTERVALS[0][1],
       cost: 50,
     },
     Hut: {
       buildingType: 'Hut',
       image: 'Hut.png',
       perCycle: 3,
-      cyclePeriod: 5000, //ms
+      cyclePeriod: 50, //ms
+      // cyclePeriod: this.INTERVALS[1][1],
       cost: 25,
     },
     Lookout: {
       buildingType: 'Lookout',
       image: 'Hut_And_Lookout.png',
       perCycle: 100,
-      cyclePeriod: 60000,
+      cyclePeriod: 400,
+      // cyclePeriod: this.INTERVALS[2][1],
       cost: 250
     }
   },
@@ -87,7 +83,7 @@ Building.reopenClass({
       image: 'Hut.png',
       perCycle: 3,
       castle: 1,
-      cyclePeriod: 5000 //ms
+      cyclePeriod: 50 //ms
     },
     {
       id: 2,
@@ -96,7 +92,7 @@ Building.reopenClass({
       image: 'Hut.png',
       perCycle: 3,
       castle: 2,
-      cyclePeriod: 5000 //ms
+      cyclePeriod: 50 //ms
     },
     {
       id: 3,
@@ -105,7 +101,7 @@ Building.reopenClass({
       image: 'Hut.png',
       perCycle: 3,
       castle: 3,
-      cyclePeriod: 5000 //ms
+      cyclePeriod: 50 //ms
     },
     {
       id: 4,
@@ -114,7 +110,7 @@ Building.reopenClass({
       image: 'Hut.png',
       perCycle: 3,
       castle: 4,
-      cyclePeriod: 5000 //ms
+      cyclePeriod: 50 //ms
     },
   ],
 

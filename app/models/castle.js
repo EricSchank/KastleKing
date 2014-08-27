@@ -5,7 +5,7 @@ var Castle = DS.Model.extend({
   name: DS.attr('string', {defaultValue: "The King's Kastle"}),
   image: DS.attr('string'),
   buildings: DS.hasMany('building', {async: true}),
-  earned: DS.attr('integer', {defaultValue: 20}),
+  earned: DS.attr('integer', {defaultValue: 300}),
   buildingCount: 0,
   perSecond: 0.0,
 
@@ -35,20 +35,35 @@ var Castle = DS.Model.extend({
       var cost = newBldg.get('cost');
       self.set('earned', (earned - cost));
 
-      self.get('buildings').addObject(newBldg);
-      newBldg.didLoad(); // Start eaning timer
-      self.didLoad();
+      self.didLoad(newBldg);
     });
   },
 
 
-  didLoad: function(){
+  didLoad: function(newBldg){
     var self = this;
-    this.get('buildings').then(function(){
-      self.get('buildings').forEach(function(bldg) {
+    this.get('buildings').then(function(bldgs){
+      if(newBldg) {
+        // bldgs.pushObject(newBldg); // This was VERY slow
+        bldgs.content.push(newBldg);
+        newBldg.set('castle', self);
+      }
+      bldgs.forEach(function(bldg) {
         bldg.set('castle', self);
       });
+
+      Castle.setupIntervals(self.store);
     });
+  },
+
+  step: function(bldgType) {
+    var bldgs = this.get('buildings').filter(function(item){
+      return (item.get('buildingType') === bldgType);
+    });// .then(function(bldgs){
+      bldgs.forEach(function(bldg){
+        bldg.step();
+      });
+    // });
   },
 
   bldgCount: function() {
@@ -65,7 +80,7 @@ var Castle = DS.Model.extend({
       bldgs.forEach(function(bldg){
         var perC = bldg.get('perCycle');
         var cPeriod = bldg.get('cyclePeriod');
-        var perS = 1000.0 * perC / cPeriod;
+        var perS = 10.0 * perC / cPeriod;
         console.log(''+perS);
         totSec += perS;
       });
@@ -76,6 +91,8 @@ var Castle = DS.Model.extend({
 });
 
 Castle.reopenClass({
+  inited: false,
+
   FIXTURES: [
     {
       id: 1,
@@ -106,9 +123,28 @@ Castle.reopenClass({
       buildings: [4]
       // buildings: [Building.createBuilding('Hut')]
     }
-  ]
+  ],
+
+  setupIntervals: function(store) {
+    if(this.inited) { return; }
+    this.inited = true;
+    // var self = this;
+    var bldgIntervals = Building.INTERVALS;
+    bldgIntervals.forEach(function(bldgInt){
+      var bldgType = bldgInt[0];
+      var time = bldgInt[1];
+
+      setInterval(function() {
+        store.find('castle').then(function(castles){
+          castles.forEach(function(cast){
+            cast.step(bldgType);
+          });
+        });
+      }, time);
+    });
+  },
+
 
 });
-
 
 export default Castle;
