@@ -5,7 +5,7 @@ var Castle = DS.Model.extend({
   name: DS.attr('string', {defaultValue: "The King's Kastle"}),
   image: DS.attr('string'),
   buildings: DS.hasMany('building', {async: true}),
-  earned: DS.attr('integer', {defaultValue: 300}),
+  earned: DS.attr('integer', {defaultValue: 30}),
   buildingCount: 0,
   perSecond: 0.0,
 
