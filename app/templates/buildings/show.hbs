@@ -1,4 +1,4 @@
-<div class="image"><img {{action 'building_clicked' this}} {{bind-attr src=image}}/></div>
-<div>{{name}}</div>
+<div class="image"><img {{action 'building_clicked' this}} src="{{unbound image}}"/></div>
+<div>{{unbound name}}</div>
 <div>${{earned}}</div>
 {{progress-bar pct=percent}}

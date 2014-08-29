@@ -4,7 +4,7 @@
   {{#each}}
     <li>
       {{#link-to 'castles.show' this}}
-        <img {{bind-attr src=image}}/>
+        <img src="{{unbound image}}"/>
       {{/link-to}}
       <div>${{earned}}</div>
       <div>${{perSecond}} / Sec</div>
