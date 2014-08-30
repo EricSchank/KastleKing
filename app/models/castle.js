@@ -44,9 +44,15 @@ var Castle = DS.Model.extend({
     var self = this;
     this.get('buildings').then(function(bldgs){
       if(newBldg) {
-        // bldgs.pushObject(newBldg); // This was VERY slow
-        bldgs.content.push(newBldg);
-        newBldg.set('castle', self);
+
+        var promise = new Ember.RSVP.Promise(function(resolve, reject){
+          // bldgs.pushObject(newBldg); // This was VERY slow
+          bldgs.content.push(newBldg);
+          newBldg.set('castle', self);
+
+          // succeed
+          resolve();
+        });
       }
       bldgs.forEach(function(bldg) {
         bldg.set('castle', self);
