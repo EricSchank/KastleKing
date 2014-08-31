@@ -131,22 +131,27 @@ Castle.reopenClass({
     }
   ],
 
+  stepIteration: function(store, time, bldgType) {
+    store.find('castle').then(function(castles){
+      castles.forEach(function(cast){
+        cast.step(bldgType);
+      });
+    });
+    Ember.run.later(this, function(){
+      this.stepIteration(store, time, bldgType);
+    }, time);
+  },
+
   setupIntervals: function(store) {
     if(this.inited) { return; }
     this.inited = true;
-    // var self = this;
+
     var bldgIntervals = Building.INTERVALS;
     bldgIntervals.forEach(function(bldgInt){
       var bldgType = bldgInt[0];
       var time = bldgInt[1];
 
-      setInterval(function() {
-        store.find('castle').then(function(castles){
-          castles.forEach(function(cast){
-            cast.step(bldgType);
-          });
-        });
-      }, time);
+      Castle.stepIteration(store, time, bldgType);
     });
   },
 
